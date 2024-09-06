@@ -69,10 +69,10 @@ namespace Accademy
 			string path = @"D:\Example.txt";
 			Write(group, path);
 			Console.WriteLine(delimetr);
-			Read(group, path);
+			Read(path);
 			Console.WriteLine(delimetr);
 
-		
+
 
 		}
 		public static void Write(Human[] group, string path)
@@ -84,11 +84,10 @@ namespace Accademy
 				File.AppendAllText(path, toWrite + "\n");
 			}
 		}
-		public static void Read(Human[] group, string path)
+		public static void Read(string path)
 		{
-			string[] toRead;
-			toRead = File.ReadAllLines(path);
-			for (int i = 0;i < group.Length; i++)
+			string[] toRead = File.ReadAllLines(path);
+			for (int i = 0; i < toRead.Length; i++)
 			{
 				Console.WriteLine(toRead[i]);
 			}
