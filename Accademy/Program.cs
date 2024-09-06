@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Accademy
 {
@@ -60,12 +61,37 @@ namespace Accademy
 				new Teacher("White", "Walter", 50, "Chemistry", 25),
 				new Graduate("Schreder", "Hank", 40, "Criminalistic", "OBN", 50, 80, "How to catch Heisenberg"),
 			};
+			Console.WriteLine(delimetr);
 			for (int i = 0; i < group.Length; i++)
 			{
 				Console.WriteLine(group[i]);
 			}
+			string path = @"D:\Example.txt";
+			Write(group, path);
+			Console.WriteLine(delimetr);
+			Read(group, path);
+			Console.WriteLine(delimetr);
+
 		
 
+		}
+		public static void Write(Human[] group, string path)
+		{
+			File.Create(path).Close();
+			for (int i = 0; i < group.Length; i++)
+			{
+				string toWrite = group[i].ToString();
+				File.AppendAllText(path, toWrite + "\n");
+			}
+		}
+		public static void Read(Human[] group, string path)
+		{
+			string[] toRead;
+			toRead = File.ReadAllLines(path);
+			for (int i = 0;i < group.Length; i++)
+			{
+				Console.WriteLine(toRead[i]);
+			}
 		}
 	}
 }
