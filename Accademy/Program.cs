@@ -67,15 +67,15 @@ namespace Accademy
 				Console.WriteLine(group[i]);
 			}
 			string path = @"D:\Example.txt";
-			Read(group, path);
+			WriteToFile(group, path);
 			Console.WriteLine(delimetr);
-			GetWriteStruct(path);
+			WriteToConsole(path);
 			Console.WriteLine(delimetr);
 
 
 
 		}
-		public static void Read(Human[] group, string path)
+		public static void WriteToFile(Human[] group, string path)
 		{
 			File.Create(path).Close();
 			for (int i = 0; i < group.Length; i++)
@@ -84,7 +84,7 @@ namespace Accademy
 				File.AppendAllText(path, toWrite + "\n");
 			}
 		}
-		public static void GetWriteStruct(string path)
+		public static void WriteToConsole(string path)
 		{
 			string[] toRead = File.ReadAllLines(path);
 			for (int i = 0; i < toRead.Length; i++)
