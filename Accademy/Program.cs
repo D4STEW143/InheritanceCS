@@ -1,5 +1,7 @@
 ﻿//#define INHERITANCE_1
 //#define INHERITANCE_2
+//#define SAVE_TO_FILE
+#define LOAD_FROM_FILE
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,25 +57,97 @@ namespace Accademy
 			Graduate g_tommy = new Graduate(s_tommy, "How to make money");
 			Console.WriteLine(g_tommy);
 #endif
+#if SAVE_TO_FILE
 			Human[] group = new Human[]
-			{
+	{
 				new Student("Pinkman", "Jessie", 25, "Chemistry", "WW-220", 95, 97),
 				new Teacher("White", "Walter", 50, "Chemistry", 25),
 				new Graduate("Schreder", "Hank", 40, "Criminalistic", "OBN", 50, 80, "How to catch Heisenberg"),
-			};
+				new Student("Vercetty", "Tommy", 30, "Theft", "Vice", 95, 98),
+				new Teacher("Diaz", "Ricardo", 50, "Weapons distribution", 20)
+	};
+
 			Console.WriteLine(delimetr);
+
 			for (int i = 0; i < group.Length; i++)
 			{
 				Console.WriteLine(group[i]);
 			}
+
+			Console.WriteLine(delimetr);
+
+			string filename = "group.csv";
+			Save(group, filename);
+
+
+			Console.WriteLine(delimetr); 
+
+			//CSV - Comma Separeted Values.
+			/*
 			string path = @"D:\Example.txt";
 			WriteToFile(group, path);
 			Console.WriteLine(delimetr);
 			WriteToConsole(path);
 			Console.WriteLine(delimetr);
+			*/
 
+#endif
 
+#if LOAD_FROM_FILE
+			Human[] group = Load("group.csv");
+			Print(group); 
+#endif
+		}
+		static void Save(Human[] group, string filename)
+		{
+			StreamWriter sw = new StreamWriter(filename);
+			for (int i = 0; i < group.Length; i++)
+			{
+				sw.WriteLine(group[i].ToFileString());
+			}
+			sw.Close();
+			System.Diagnostics.Process.Start("excel", filename);
+		}
+		static Human[] Load(string filename)
+		{
+			List<Human> group = new List<Human>();
 
+			try
+			{
+				StreamReader sr = new StreamReader(filename);
+				while (!sr.EndOfStream)
+				{
+					string buffer = sr.ReadLine();
+					string[] values = buffer.Split(',', ';');
+					group.Add(HumanFactory(values[0]));
+					group.Last().Init(values);
+				}
+				sr.Close();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			return group.ToArray();
+		}
+		static Human HumanFactory(string type)
+		{
+			Human human = null;
+			switch (type)
+			{
+				case "Teacher": human = new Teacher("", "", 0, "", 0); break;
+				case "Student": human = new Student("", "", 0, "", "", 0, 0); break;
+				case "Graduate": human = new Graduate("", "", 0, "", "", 0, 0, ""); break;
+				default: human = new Human("", "", 0); break;
+			}
+			return human;
+		}
+		static void Print(Human[] group)
+		{
+			for (int i = 0; i < group.Length; i++)
+			{
+                Console.WriteLine(group[i]);
+			}
 		}
 		public static void WriteToFile(Human[] group, string path)
 		{

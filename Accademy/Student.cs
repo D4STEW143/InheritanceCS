@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Accademy
 {
-	internal class Student:Human
+	internal class Student : Human
 	{
 		public string Speciality { get; set; }
 		public string Group { get; set; }
 		double rating;
 		double attendance;
-		public double Rating 
+		public double Rating
 		{
 			get => rating;
-			set => rating = value < 100 ? value : 100; 
+			set => rating = value < 100 ? value : 100;
 		}
 		public double Attendance
 		{
@@ -29,17 +29,17 @@ namespace Accademy
 			(
 				string lastName, string firstName, uint age,
 				string speciality, string group, double rating, double attendance
-			):base(lastName, firstName, age)
-		{
-			Init(speciality, group, rating, attendance);
-            Console.WriteLine($"SConstr: \t{GetHashCode()}");
-		}
-		public Student(Human human, string speciality, string group, double rating, double attendance):base(human)
+			) : base(lastName, firstName, age)
 		{
 			Init(speciality, group, rating, attendance);
 			Console.WriteLine($"SConstr: \t{GetHashCode()}");
 		}
-		public Student(Student other):base(other)
+		public Student(Human human, string speciality, string group, double rating, double attendance) : base(human)
+		{
+			Init(speciality, group, rating, attendance);
+			Console.WriteLine($"SConstr: \t{GetHashCode()}");
+		}
+		public Student(Student other) : base(other)
 		{
 			Init(other.Speciality, other.Group, other.Rating, other.Attendance);
 			Console.WriteLine($"SCopyConstr: \t{GetHashCode()}");
@@ -54,12 +54,24 @@ namespace Accademy
 		}
 		public void Print()
 		{
-			base .Print();
-            Console.WriteLine($"{Speciality} {Group} {Rating} {Attendance}");
+			base.Print();
+			Console.WriteLine($"{Speciality} {Group} {Rating} {Attendance}");
 		}
 		public override string ToString()
 		{
-			return base.ToString()+$"{Speciality}, {Group}, {Rating}, {Attendance}";
+			return base.ToString() + $"{Speciality.PadRight(25)}{Group.PadRight(8)}{Rating.ToString().PadRight(8)}{Attendance.ToString().PadRight(8)}";
+		}
+		public override string ToFileString()
+		{
+			return $"{base.ToFileString()}, {Speciality}, {Group}, {Rating}, {Attendance}";
+		}
+		public override void Init(string[] values)
+		{
+			base.Init(values);
+			Speciality = values[4];
+			Group = values[5];
+			Rating = Convert.ToDouble(values[6]);
+			Attendance = Convert.ToDouble(values[7]);
 		}
 	}
 }
