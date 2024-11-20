@@ -1,5 +1,7 @@
 ﻿#include<iostream>
 #include<fstream>
+#include<string>
+#include<vector>
 
 using std::cout;
 using std::cin;
@@ -7,7 +9,9 @@ using std::endl;
 
 //#define WRITE_TO_FILE
 //#define READ_FROM_FILE
-#define HOMEWORK_TXT_SWAP
+//#define HOMEWORK_TXT_SWAP
+#define HOMEWORK_DHCDP_FILE
+
 
 void main()
 {
@@ -49,26 +53,73 @@ void main()
 
 #ifdef HOMEWORK_TXT_SWAP
 
-	//	1) Прочитать информацию из файла
-	std::ifstream fin("201 RAW.txt");
-	if (fin.is_open())
-	{
-		while (!fin.eof())
-		{
-			const int SIZE = 128;
-			char buffer[SIZE]{};
-			fin.getline(buffer, SIZE);
-			cout << buffer << endl;
-		}
-	}
+	std::string input_file = "201 RAW.txt";
+	std::string output_file = "201 READY.txt";
+	std::ifstream fin(input_file);
+
+	if (!fin.is_open()) { std::cerr << "Error: file not found" << endl; }
 	else
 	{
-		std::cerr << "Error: file not found" << endl;
-	}
+		std::ofstream fout;
+		fout.open(output_file);
 
-	//	2) 
+		std::string textLine;
+		while (getline(fin, textLine))
+		{
+			std::string ip = (textLine.size() > 1) ? textLine.substr(0, 14) : " ";
+			std::string mac = (textLine.size() > 1) ? textLine.substr(22, 17) : " ";
+
+			cout << mac << "\t" << ip << endl;
+			fout << mac << "\t" << ip << endl;
+		}
+		fin.close();
+		fout.close();
+	}
 
 
 #endif // HOMEWORK_TXT_SWAP
 
+#ifdef HOMEWORK_DHCDP_FILE
+
+	std::string input_file = "201 RAW.txt";
+	std::string output_file = "201.dhcpd.txt";
+	std::ifstream fin(input_file);
+
+	if (!fin.is_open()) { std::cerr << "Error: file " + input_file + " not found!" << endl; }
+	else
+	{
+		std::ofstream fout;
+		fout.open(output_file);
+
+		std::string textLine;
+		unsigned int count = 1;
+		while (getline(fin, textLine))
+		{
+			std::string ip = (textLine.size() > 1) ? textLine.substr(0, 14) : " ";
+			std::string mac = (textLine.size() > 1) ? textLine.substr(22, 17) : " ";
+
+			if (ip != " " && mac != " ")
+			{
+				std::string output =
+					"Host-" + std::to_string(count) + "\n" +
+					"{" + "\n" + "\t" +
+					"Hardware ethernet" + "\t" + mac + ";" + "\n" +
+					"\t" +
+					"Fixed address" + "\t\t" + ip + ";" + "\n" +
+					"}" + "\n" + "\n";
+				cout << output;
+				fout << output;
+
+				count++;
+			}
+		}
+		fin.close();
+		fout.close();
+
+		system(("notepad " + output_file).c_str());
+	}
+
+#endif // HOMEWORK_DHCDP_FILE
+
 }
+
